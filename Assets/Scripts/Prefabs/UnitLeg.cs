@@ -1,67 +1,64 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Prefabs
 {
     public class UnitLeg : MonoBehaviour
     {
-        public float currentX;
+        private float _currentX;
         private bool _positive;
         private bool _play = true;
 
         private int _speed = 200;
 
-        public void SetPositive(bool positive)
+        void Update()
         {
-            _positive = positive;
+            if (_play)
+            {
+                Animations();
+            }
         }
 
-        public void SetSpeed(int speed)
+        public void StartAnimation(bool positive, int speed)
         {
-            _speed = speed;
-            currentX = 0;
+            _speed = speed * 100;
+            _currentX = 0;
+            _positive = positive;
+            _play = true;
         }
 
         public void Stop()
         {
             _play = false;
-            currentX = 0;
-            rotate(currentX);
+            _currentX = 0;
+            Rotate(_currentX);
         }
 
-        private void Update()
-        {
-            if (_play)
-            {
-                Steps();
-            }
-        }
 
-        private void Steps()
+        private void Animations()
         {
-            if (currentX >= 45)
+            if (_currentX >= 45)
             {
                 _positive = false;
             }
 
-            if (currentX <= -45)
+            if (_currentX <= -45)
             {
                 _positive = true;
             }
 
             if (_positive)
             {
-                currentX += Time.deltaTime * _speed;
+                _currentX += Time.deltaTime * _speed;
             }
             else
             {
-                currentX -= Time.deltaTime * _speed;
+                _currentX -= Time.deltaTime * _speed;
             }
 
-            rotate(currentX);
+            Rotate(_currentX);
         }
 
-        private void rotate(float x)
+        private void Rotate(float x)
         {
             Vector3 vector3 = new Vector3(x, 0, 0);
             transform.localRotation = Quaternion.Euler(vector3);
